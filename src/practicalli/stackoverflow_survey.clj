@@ -1,3 +1,10 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Practicalli Tablecloth Playground and Stackoverflow survey example
+;;
+;; See the `tablecloth-basics` namespace for example use of Tablecloth functions
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
 (ns practicalli.stackoverflow-survey
   (:gen-class)
   (:require [tablecloth.api :as tables]
