@@ -1,5 +1,7 @@
 (ns practicalli.stackoverflow-survey
-  (:gen-class))
+  (:gen-class)
+  (:require [tablecloth.api :as tables]
+            [tech.v3.datatype.functional :as datatype]))
 
 (defn greet
   "Callable entry point to the application."
