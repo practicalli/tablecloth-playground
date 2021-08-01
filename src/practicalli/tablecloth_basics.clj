@@ -7,6 +7,7 @@
 (ns practicalli.tablecloth-basics
   (:require [tablecloth.api :as tables]
             [tech.v3.datatype.functional :as datatype]
+            [tech.v3.datatype.datetime :as datetime]
             [clojure.java.io :as io]))
 
 (comment
@@ -260,6 +261,40 @@ DS
 (-> seattle-weather-dataset
     println)
 
+(-> seattle-weather-dataset
+    (tables/head 3))
+
+(-> seattle-weather-dataset
+    (tables/group-by ,,, ["date"]))
+;; => _unnamed [1461 3]:
+;;    | :group-id |                                                         :name |                                                                       :data |
+;;    |----------:|---------------------------------------------------------------|-----------------------------------------------------------------------------|
+;;    |         0 | {"date" #object[java.time.LocalDate 0x3d53b27e "2012-01-01"]} |  Group: {"date" #object[java.time.LocalDate 0x1951e51 "2012-01-01"]} [1 6]: |
+;;    |         1 | {"date" #object[java.time.LocalDate 0x6d0417c8 "2012-01-02"]} |  Group: {"date" #object[java.time.LocalDate 0x729f6c3 "2012-01-02"]} [1 6]: |
+;;    |         2 |  {"date" #object[java.time.LocalDate 0xe257cfc "2012-01-03"]} | Group: {"date" #object[java.time.LocalDate 0x1e354650 "2012-01-03"]} [1 6]: |
+;;    |         3 | {"date" #object[java.time.LocalDate 0x41ce5689 "2012-01-04"]} | Group: {"date" #object[java.time.LocalDate 0x1936d9aa "2012-01-04"]} [1 6]: |
+;;    |         4 | {"date" #object[java.time.LocalDate 0x5a2fe8c5 "2012-01-05"]} | Group: {"date" #object[java.time.LocalDate 0x30783b4b "2012-01-05"]} [1 6]: |
+;;    |         5 | {"date" #object[java.time.LocalDate 0x19fd99e1 "2012-01-06"]} | Group: {"date" #object[java.time.LocalDate 0x78af5c69 "2012-01-06"]} [1 6]: |
+;;    |         6 |  {"date" #object[java.time.LocalDate 0x5314021 "2012-01-07"]} | Group: {"date" #object[java.time.LocalDate 0x4c9c82ea "2012-01-07"]} [1 6]: |
+;;    |         7 | {"date" #object[java.time.LocalDate 0x40ae1d8c "2012-01-08"]} | Group: {"date" #object[java.time.LocalDate 0x6348e95a "2012-01-08"]} [1 6]: |
+;;    |         8 |  {"date" #object[java.time.LocalDate 0xfd54f4c "2012-01-09"]} | Group: {"date" #object[java.time.LocalDate 0x129b341b "2012-01-09"]} [1 6]: |
+;;    |         9 | {"date" #object[java.time.LocalDate 0x352cca0e "2012-01-10"]} | Group: {"date" #object[java.time.LocalDate 0x10557e35 "2012-01-10"]} [1 6]: |
+;;    |        10 | {"date" #object[java.time.LocalDate 0x5f772747 "2012-01-11"]} | Group: {"date" #object[java.time.LocalDate 0x38f62507 "2012-01-11"]} [1 6]: |
+;;    |        11 | {"date" #object[java.time.LocalDate 0x227cb9ce "2012-01-12"]} | Group: {"date" #object[java.time.LocalDate 0x1c50197a "2012-01-12"]} [1 6]: |
+;;    |        12 | {"date" #object[java.time.LocalDate 0x3a44212e "2012-01-13"]} | Group: {"date" #object[java.time.LocalDate 0x5720dd07 "2012-01-13"]} [1 6]: |
+;;    |        13 | {"date" #object[java.time.LocalDate 0x60ff8013 "2012-01-14"]} | Group: {"date" #object[java.time.LocalDate 0x6c3fb500 "2012-01-14"]} [1 6]: |
+;;    |        14 | {"date" #object[java.time.LocalDate 0x73593d8e "2012-01-15"]} | Group: {"date" #object[java.time.LocalDate 0x65687b9d "2012-01-15"]} [1 6]: |
+;;    |        15 | {"date" #object[java.time.LocalDate 0x380ec9f0 "2012-01-16"]} | Group: {"date" #object[java.time.LocalDate 0x79ef3583 "2012-01-16"]} [1 6]: |
+;;    |        16 | {"date" #object[java.time.LocalDate 0x78f08708 "2012-01-17"]} | Group: {"date" #object[java.time.LocalDate 0x28f6075c "2012-01-17"]} [1 6]: |
+;;    |        17 | {"date" #object[java.time.LocalDate 0x71573ec9 "2012-01-18"]} | Group: {"date" #object[java.time.LocalDate 0x39f020f7 "2012-01-18"]} [1 6]: |
+;;    |        18 | {"date" #object[java.time.LocalDate 0x6c28c1e6 "2012-01-19"]} | Group: {"date" #object[java.time.LocalDate 0x1fe210c7 "2012-01-19"]} [1 6]: |
+;;    |        19 | {"date" #object[java.time.LocalDate 0x4a48cf21 "2012-01-20"]} | Group: {"date" #object[java.time.LocalDate 0x1f217d95 "2012-01-20"]} [1 6]: |
+;;    |        20 | {"date" #object[java.time.LocalDate 0x72206464 "2012-01-21"]} |  Group: {"date" #object[java.time.LocalDate 0x77545ca "2012-01-21"]} [1 6]: |
+;;    |        21 | {"date" #object[java.time.LocalDate 0x5fa9bb28 "2012-01-22"]} | Group: {"date" #object[java.time.LocalDate 0x3fba2a4b "2012-01-22"]} [1 6]: |
+;;    |        22 | {"date" #object[java.time.LocalDate 0x65a77349 "2012-01-23"]} | Group: {"date" #object[java.time.LocalDate 0x30d16153 "2012-01-23"]} [1 6]: |
+;;    |        23 |  {"date" #object[java.time.LocalDate 0xf3bfcf3 "2012-01-24"]} | Group: {"date" #object[java.time.LocalDate 0x24887f09 "2012-01-24"]} [1 6]: |
+;;    |        24 | {"date" #object[java.time.LocalDate 0x458f6909 "2012-01-25"]} |  Group: {"date" #object[java.time.LocalDate 0x97e2547 "2012-01-25"]} [1 6]: |
+
 ;; Group by one or more column names
 (-> seattle-weather-dataset
     (tables/group-by ,,, ["weather"]))
@@ -271,6 +306,225 @@ DS
 ;;    |         2 |     {"weather" "sun"} |    Group: {"weather" "sun"} [640 6]: |
 ;;    |         3 |    {"weather" "snow"} |    Group: {"weather" "snow"} [26 6]: |
 ;;    |         4 |     {"weather" "fog"} |    Group: {"weather" "fog"} [101 6]: |
+
+(def seattle-weather-keywords
+  (tables/dataset "https://vega.github.io/vega-lite/examples/data/seattle-weather.csv" {:key-fn keyword}))
+
+
+(-> seattle-weather-dataset
+    (tables/group-by ,,, [""]))
+
+(-> seattle-weather-dataset
+    (tables/order-by ["date"] :desc ))
+;; => https://vega.github.io/vega-lite/examples/data/seattle-weather.csv [1461 6]:
+;;    |       date | precipitation | temp_max | temp_min | wind | weather |
+;;    |------------|--------------:|---------:|---------:|-----:|---------|
+;;    | 2015-12-31 |           0.0 |      5.6 |     -2.1 |  3.5 |     sun |
+;;    | 2015-12-30 |           0.0 |      5.6 |     -1.0 |  3.4 |     sun |
+;;    | 2015-12-29 |           0.0 |      7.2 |      0.6 |  2.6 |     fog |
+;;    | 2015-12-28 |           1.5 |      5.0 |      1.7 |  1.3 |    rain |
+;;    | 2015-12-27 |           8.6 |      4.4 |      1.7 |  2.9 |    rain |
+;;    | 2015-12-26 |           0.0 |      4.4 |      0.0 |  2.5 |     sun |
+;;    | 2015-12-25 |           5.8 |      5.0 |      2.2 |  1.5 |    rain |
+;;    | 2015-12-24 |           2.5 |      5.6 |      2.2 |  4.3 |    rain |
+;;    | 2015-12-23 |           6.1 |      5.0 |      2.8 |  7.6 |    rain |
+;;    | 2015-12-22 |           4.6 |      7.8 |      2.8 |  5.0 |    rain |
+;;    | 2015-12-21 |          27.4 |      5.6 |      2.8 |  4.3 |    rain |
+;;    | 2015-12-20 |           4.3 |      7.8 |      4.4 |  6.7 |    rain |
+;;    | 2015-12-19 |           0.0 |      8.3 |      2.8 |  4.1 |     fog |
+;;    | 2015-12-18 |          18.5 |      8.9 |      4.4 |  5.1 |    rain |
+;;    | 2015-12-17 |          21.8 |      6.7 |      3.9 |  6.0 |    rain |
+;;    | 2015-12-16 |           3.6 |      6.1 |      2.8 |  2.3 |    rain |
+;;    | 2015-12-15 |           1.5 |      6.7 |      1.1 |  2.9 |    rain |
+;;    | 2015-12-14 |           0.0 |      7.8 |      1.7 |  1.7 |     sun |
+;;    | 2015-12-13 |           1.3 |      7.8 |      6.1 |  6.1 |    rain |
+;;    | 2015-12-12 |          16.0 |      8.9 |      5.6 |  5.6 |    rain |
+;;    | 2015-12-11 |           0.3 |      9.4 |      4.4 |  2.8 |    rain |
+;;    | 2015-12-10 |           9.4 |     11.7 |      6.1 |  7.5 |    rain |
+;;    | 2015-12-09 |          13.5 |     12.2 |      7.8 |  6.3 |    rain |
+;;    | 2015-12-08 |          54.1 |     15.6 |     10.0 |  6.2 |    rain |
+;;    | 2015-12-07 |          27.4 |     11.1 |      8.3 |  3.4 |    rain |
+
+
+
+(-> seattle-weather-keywords
+    (tables/order-by [:date] :desc))
+;; => https://vega.github.io/vega-lite/examples/data/seattle-weather.csv [1461 6]:
+;;    |      :date | :precipitation | :temp_max | :temp_min | :wind | :weather |
+;;    |------------|---------------:|----------:|----------:|------:|----------|
+;;    | 2015-12-31 |            0.0 |       5.6 |      -2.1 |   3.5 |      sun |
+;;    | 2015-12-30 |            0.0 |       5.6 |      -1.0 |   3.4 |      sun |
+;;    | 2015-12-29 |            0.0 |       7.2 |       0.6 |   2.6 |      fog |
+;;    | 2015-12-28 |            1.5 |       5.0 |       1.7 |   1.3 |     rain |
+;;    | 2015-12-27 |            8.6 |       4.4 |       1.7 |   2.9 |     rain |
+;;    | 2015-12-26 |            0.0 |       4.4 |       0.0 |   2.5 |      sun |
+;;    | 2015-12-25 |            5.8 |       5.0 |       2.2 |   1.5 |     rain |
+;;    | 2015-12-24 |            2.5 |       5.6 |       2.2 |   4.3 |     rain |
+;;    | 2015-12-23 |            6.1 |       5.0 |       2.8 |   7.6 |     rain |
+;;    | 2015-12-22 |            4.6 |       7.8 |       2.8 |   5.0 |     rain |
+;;    | 2015-12-21 |           27.4 |       5.6 |       2.8 |   4.3 |     rain |
+;;    | 2015-12-20 |            4.3 |       7.8 |       4.4 |   6.7 |     rain |
+;;    | 2015-12-19 |            0.0 |       8.3 |       2.8 |   4.1 |      fog |
+;;    | 2015-12-18 |           18.5 |       8.9 |       4.4 |   5.1 |     rain |
+;;    | 2015-12-17 |           21.8 |       6.7 |       3.9 |   6.0 |     rain |
+;;    | 2015-12-16 |            3.6 |       6.1 |       2.8 |   2.3 |     rain |
+;;    | 2015-12-15 |            1.5 |       6.7 |       1.1 |   2.9 |     rain |
+;;    | 2015-12-14 |            0.0 |       7.8 |       1.7 |   1.7 |      sun |
+;;    | 2015-12-13 |            1.3 |       7.8 |       6.1 |   6.1 |     rain |
+;;    | 2015-12-12 |           16.0 |       8.9 |       5.6 |   5.6 |     rain |
+;;    | 2015-12-11 |            0.3 |       9.4 |       4.4 |   2.8 |     rain |
+;;    | 2015-12-10 |            9.4 |      11.7 |       6.1 |   7.5 |     rain |
+;;    | 2015-12-09 |           13.5 |      12.2 |       7.8 |   6.3 |     rain |
+;;    | 2015-12-08 |           54.1 |      15.6 |      10.0 |   6.2 |     rain |
+;;    | 2015-12-07 |           27.4 |      11.1 |       8.3 |   3.4 |     rain |
+
+(-> seattle-weather-keywords
+    (tables/order-by [:date] :asc))
+;; => https://vega.github.io/vega-lite/examples/data/seattle-weather.csv [1461 6]:
+;;    |      :date | :precipitation | :temp_max | :temp_min | :wind | :weather |
+;;    |------------|---------------:|----------:|----------:|------:|----------|
+;;    | 2012-01-01 |            0.0 |      12.8 |       5.0 |   4.7 |  drizzle |
+;;    | 2012-01-02 |           10.9 |      10.6 |       2.8 |   4.5 |     rain |
+;;    | 2012-01-03 |            0.8 |      11.7 |       7.2 |   2.3 |     rain |
+;;    | 2012-01-04 |           20.3 |      12.2 |       5.6 |   4.7 |     rain |
+;;    | 2012-01-05 |            1.3 |       8.9 |       2.8 |   6.1 |     rain |
+;;    | 2012-01-06 |            2.5 |       4.4 |       2.2 |   2.2 |     rain |
+;;    | 2012-01-07 |            0.0 |       7.2 |       2.8 |   2.3 |     rain |
+;;    | 2012-01-08 |            0.0 |      10.0 |       2.8 |   2.0 |      sun |
+;;    | 2012-01-09 |            4.3 |       9.4 |       5.0 |   3.4 |     rain |
+;;    | 2012-01-10 |            1.0 |       6.1 |       0.6 |   3.4 |     rain |
+;;    | 2012-01-11 |            0.0 |       6.1 |      -1.1 |   5.1 |      sun |
+;;    | 2012-01-12 |            0.0 |       6.1 |      -1.7 |   1.9 |      sun |
+;;    | 2012-01-13 |            0.0 |       5.0 |      -2.8 |   1.3 |      sun |
+;;    | 2012-01-14 |            4.1 |       4.4 |       0.6 |   5.3 |     snow |
+;;    | 2012-01-15 |            5.3 |       1.1 |      -3.3 |   3.2 |     snow |
+;;    | 2012-01-16 |            2.5 |       1.7 |      -2.8 |   5.0 |     snow |
+;;    | 2012-01-17 |            8.1 |       3.3 |       0.0 |   5.6 |     snow |
+;;    | 2012-01-18 |           19.8 |       0.0 |      -2.8 |   5.0 |     snow |
+;;    | 2012-01-19 |           15.2 |      -1.1 |      -2.8 |   1.6 |     snow |
+;;    | 2012-01-20 |           13.5 |       7.2 |      -1.1 |   2.3 |     snow |
+;;    | 2012-01-21 |            3.0 |       8.3 |       3.3 |   8.2 |     rain |
+;;    | 2012-01-22 |            6.1 |       6.7 |       2.2 |   4.8 |     rain |
+;;    | 2012-01-23 |            0.0 |       8.3 |       1.1 |   3.6 |     rain |
+;;    | 2012-01-24 |            8.6 |      10.0 |       2.2 |   5.1 |     rain |
+;;    | 2012-01-25 |            8.1 |       8.9 |       4.4 |   5.4 |     rain |
+
+
+;; Research question: How much warmer does it get during the summer
+;; ??
+
+(-> seattle-weather-keywords
+    (tables/order-by [:date] :asc))
+
+;;
+(->> seattle-weather-keywords
+   :date
+    (datetime/long-temporal-field :years ))
+
+(-> seattle-weather-keywords
+     (tables/add-columns {:summer (->> seattle-weather-keywords
+                                       :date
+                                       (datetime/long-temporal-field :months)
+                                       #{6 7 8}
+                                       some?)
+                          :year   (->> seattle-weather-keywords
+                                       :date
+                                       (datetime/long-temporal-field :years))}))
+;; => https://vega.github.io/vega-lite/examples/data/seattle-weather.csv [1461 8]:
+;;    |      :date | :precipitation | :temp_max | :temp_min | :wind | :weather | :summer | :year |
+;;    |------------|---------------:|----------:|----------:|------:|----------|---------|------:|
+;;    | 2012-01-01 |            0.0 |      12.8 |       5.0 |   4.7 |  drizzle |   false |  2012 |
+;;    | 2012-01-02 |           10.9 |      10.6 |       2.8 |   4.5 |     rain |   false |  2012 |
+;;    | 2012-01-03 |            0.8 |      11.7 |       7.2 |   2.3 |     rain |   false |  2012 |
+;;    | 2012-01-04 |           20.3 |      12.2 |       5.6 |   4.7 |     rain |   false |  2012 |
+;;    | 2012-01-05 |            1.3 |       8.9 |       2.8 |   6.1 |     rain |   false |  2012 |
+;;    | 2012-01-06 |            2.5 |       4.4 |       2.2 |   2.2 |     rain |   false |  2012 |
+;;    | 2012-01-07 |            0.0 |       7.2 |       2.8 |   2.3 |     rain |   false |  2012 |
+;;    | 2012-01-08 |            0.0 |      10.0 |       2.8 |   2.0 |      sun |   false |  2012 |
+;;    | 2012-01-09 |            4.3 |       9.4 |       5.0 |   3.4 |     rain |   false |  2012 |
+;;    | 2012-01-10 |            1.0 |       6.1 |       0.6 |   3.4 |     rain |   false |  2012 |
+;;    | 2012-01-11 |            0.0 |       6.1 |      -1.1 |   5.1 |      sun |   false |  2012 |
+;;    | 2012-01-12 |            0.0 |       6.1 |      -1.7 |   1.9 |      sun |   false |  2012 |
+;;    | 2012-01-13 |            0.0 |       5.0 |      -2.8 |   1.3 |      sun |   false |  2012 |
+;;    | 2012-01-14 |            4.1 |       4.4 |       0.6 |   5.3 |     snow |   false |  2012 |
+;;    | 2012-01-15 |            5.3 |       1.1 |      -3.3 |   3.2 |     snow |   false |  2012 |
+;;    | 2012-01-16 |            2.5 |       1.7 |      -2.8 |   5.0 |     snow |   false |  2012 |
+;;    | 2012-01-17 |            8.1 |       3.3 |       0.0 |   5.6 |     snow |   false |  2012 |
+;;    | 2012-01-18 |           19.8 |       0.0 |      -2.8 |   5.0 |     snow |   false |  2012 |
+;;    | 2012-01-19 |           15.2 |      -1.1 |      -2.8 |   1.6 |     snow |   false |  2012 |
+;;    | 2012-01-20 |           13.5 |       7.2 |      -1.1 |   2.3 |     snow |   false |  2012 |
+;;    | 2012-01-21 |            3.0 |       8.3 |       3.3 |   8.2 |     rain |   false |  2012 |
+;;    | 2012-01-22 |            6.1 |       6.7 |       2.2 |   4.8 |     rain |   false |  2012 |
+;;    | 2012-01-23 |            0.0 |       8.3 |       1.1 |   3.6 |     rain |   false |  2012 |
+;;    | 2012-01-24 |            8.6 |      10.0 |       2.2 |   5.1 |     rain |   false |  2012 |
+;;    | 2012-01-25 |            8.1 |       8.9 |       4.4 |   5.4 |     rain |   false |  2012 |
+;; summer: june july august
+
+(-> seattle-weather-keywords
+    (tables/add-columns {:summer (->> seattle-weather-keywords
+                                      :date
+                                      (datetime/long-temporal-field :months)
+                                      (map #{6 7 8})
+                                      (map some?))
+                         :year   (->> seattle-weather-keywords
+                                      :date
+                                      (datetime/long-temporal-field :years))})
+    (tables/group-by :summer)
+    (tables/aggregate {:total-precipitation
+                       (fn [dataset]
+                         (-> dataset
+                             :precipitation
+                             tech.v3.datatype.functional/sum))}))
+;; => _unnamed [2 2]:
+;;    | :total-precipitation | :$group-name |
+;;    |---------------------:|--------------|
+;;    |               4081.2 |        false |
+;;    |                344.8 |         true |
+
+
+
+
+
+
+
+;; => _unnamed [2 3]:
+;;    | :group-id | :name |                  :data |
+;;    |----------:|-------|------------------------|
+;;    |         0 | false | Group: false [1093 8]: |
+;;    |         1 |  true |   Group: true [368 8]: |
+;; => _unnamed [4 3]:
+;;    | :group-id | :name |             :data |
+;;    |----------:|------:|-------------------|
+;;    |         0 |       | Group:  [1093 8]: |
+;;    |         1 |     6 | Group: 6 [120 8]: |
+;;    |         2 |     7 | Group: 7 [124 8]: |
+;;    |         3 |     8 | Group: 8 [124 8]: |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;; (import [org.threeten.extra YearQuarter])
+;; (def ausdata
+;;   (-> "./data/aus-production.csv"
+;;       (tbl/dataset
+;;         {:dataset-name "aus-production"
+;;          :key-fn keyword
+;;          :parser-fn {"Quarter" [:year-quarter (fn [date-str] (-> date-str (replace #" " "-") (YearQuarter/parse)))]}})
+
+;; ;; new column :QuarterEnd which is the last date of the :Quarter in localdate
+;; (tbl/add-or-replace-column :QuarterEnd #(dtype/emap (fn [x] (.atEndOfQuarter x)) :local-date (:Quarter %)))
+;; ;; indexed
+;; (idx/index-by :Quarter)))
 
 
 ;; Use head to have a view of each group limited to a number
